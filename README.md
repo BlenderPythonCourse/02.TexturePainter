@@ -15,3 +15,5 @@ www.GameDev.tv
 Videos in this section...
 
 + TP01 - Section 2 Introduction
++ TP02 - Project Setup & GitHub
++ TP03 - No Such Thing As Plain Text

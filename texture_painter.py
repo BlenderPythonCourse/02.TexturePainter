@@ -7,12 +7,18 @@ import importlib; importlib.reload(texture_painter); texture_painter.go()
 '''
 
 import codecs
+import csv
 
 def get_backers(csv_filename):
-    stream = codecs.open(csv_filename, 'r', 'utf-8-sig')
-    return stream  # change to backer object later
+    with codecs.open(csv_filename, 'r', 'utf-8-sig') as stream:
+        iterable = csv.reader(stream)
+        header = next(iterable)
+        for row in iterable:
+            backer = dict(zip(header, row))
+            yield backer
 
 def go():
     print("Texture Painter starting up.")
     # Read through the CSV
-    print(get_backers('backers_10.csv'))
+    for backer in get_backers('backers_10.csv'):
+        print(backer)

@@ -28,8 +28,7 @@ def render_text_to_file(text_to_render, to_filename):
     draw.text((0,0), text_to_render, font=fnt, fill=(255,255,255))
     image.save(to_filename)
 
-def go():
-    print("Texture Painter starting up.")
+def read_csv():
     # Read through the CSV
     cwd = os.path.dirname(bpy.data.filepath)
     for backer in get_backers('backers_10.csv'):
@@ -37,3 +36,15 @@ def go():
         filename = cwd + '\\texture_cache\\' + backer['Number'] + '.png'
         print("Rendering", text_to_render, "to", filename)
         render_text_to_file(text_to_render, filename)
+
+def throw_invalid_selection():
+    if len(bpy.context.selected_objects) == 0:
+        raise Exception("Please select exactly one prorotype object.")
+    if len(bpy.context.selected_objects) > 1:
+        raise Exception("Please select exactly one prorotype object.")
+
+def go():
+    print("Texture Painter starting up.")
+    throw_invalid_selection()
+    print("Prototype object found.")
+    # read_csv()

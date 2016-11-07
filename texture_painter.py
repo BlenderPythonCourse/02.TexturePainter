@@ -50,11 +50,23 @@ def create_plaque(prototype, offset):
     new_plaque.select = False # to leave selection "as found"
     return new_plaque
 
+def get_offset(num, columns, spacing):
+    """Return offset from prototype position.
+
+    Keyword arguments:
+    num -- the number of the object, starting from 0
+    columns -- how many columns before wrapping
+    spacing -- a tuple of (x,y) spaing between objects
+    """
+    x_offset = (num % columns) * spacing[0] # x-spacing
+    y_offset = (num // columns) * spacing[1] # y-spacing
+
+    return (x_offset, y_offset)
 def go():
     print("Texture Painter starting up.")
     throw_invalid_selection()
     print("Prototype object found.")
     # read_csv()
-
-    prototype = bpy.context.selected_objects[0]
-    create_plaque(prototype, (0,1,0))
+    #prototype = bpy.context.selected_objects[0]
+    # create_plaque(prototype, (0,1,0))
+    print (get_offset(3,3,(10,10,0)))

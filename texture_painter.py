@@ -43,8 +43,18 @@ def throw_invalid_selection():
     if len(bpy.context.selected_objects) > 1:
         raise Exception("Please select exactly one prorotype object.")
 
+def create_plaque(prototype, offset):
+    prototype.select = True
+    bpy.ops.object.duplicate_move(TRANSFORM_OT_translate={"value":offset})
+    new_plaque = bpy.context.selected_objects[0]
+    new_plaque.select = False # to leave selection "as found"
+    return new_plaque
+
 def go():
     print("Texture Painter starting up.")
     throw_invalid_selection()
     print("Prototype object found.")
     # read_csv()
+
+    prototype = bpy.context.selected_objects[0]
+    create_plaque(prototype, (0,1,0))

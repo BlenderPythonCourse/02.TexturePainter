@@ -28,15 +28,6 @@ def render_text_to_file(text_to_render, to_filename):
     draw.text((0,0), text_to_render, font=fnt, fill=(255,255,255))
     image.save(to_filename)
 
-def read_csv():
-    # Read through the CSV
-    cwd = os.path.dirname(bpy.data.filepath)
-    for backer in get_backers('backers_10.csv'):
-        text_to_render = backer['Name'] + ', ' + backer['Country']
-        filename = cwd + '\\texture_cache\\' + backer['Number'] + '.png'
-        print("Rendering", text_to_render, "to", filename)
-        render_text_to_file(text_to_render, filename)
-
 def throw_invalid_selection():
     if len(bpy.context.selected_objects) == 0:
         raise Exception("Please select exactly one prorotype object.")
@@ -61,6 +52,13 @@ def get_offset(num, rows, spacing):
     y_offset = (num // rows) * spacing[1] # y-spacing
     return (x_offset, y_offset)
 
+def swap_text(object, backer, index):
+    cwd = os.path.dirname(bpy.data.filepath)
+    text_to_render = backer['Name'] + ', ' + backer['Country']
+    filename = cwd + '\\texture_cache\\' + str(index) + '.png'
+    render_text_to_file(text_to_render, filename)
+    print("Swapping texture to:", backer) # TODO actually swap
+
 def go():
     print("Texture Painter starting up.")
     throw_invalid_selection()
@@ -72,4 +70,4 @@ def go():
         else:
             x, y = get_offset(num, 4, (-.2,.6,0))
             plaque = create_plaque(prototype, (x, y, 0))
-        print("Swapping texture to:", backer) # TODO actually swap
+        swap_text(plaque, backer, num)

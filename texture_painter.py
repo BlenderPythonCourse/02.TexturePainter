@@ -34,12 +34,12 @@ def throw_invalid_selection():
     if len(bpy.context.selected_objects) > 1:
         raise Exception("Please select exactly one prorotype object.")
 
-def create_plaque(prototype, offset):
+def create_target_object(prototype, offset):
     prototype.select = True
     bpy.ops.object.duplicate_move(TRANSFORM_OT_translate={"value":offset})
-    new_plaque = bpy.context.selected_objects[0]
-    new_plaque.select = False # to leave selection "as found"
-    return new_plaque
+    new_target_object = bpy.context.selected_objects[0]
+    new_target_object.select = False # to leave selection "as found"
+    return new_target_object
 
 def get_offset(num, rows, spacing):
     """Return offset from prototype position.
@@ -52,12 +52,24 @@ def get_offset(num, rows, spacing):
     y_offset = (num // rows) * spacing[1] # y-spacing
     return (x_offset, y_offset)
 
-def swap_text(object, backer, index):
+def swap_texture(target_object, image_filename):
+    """Swaps the first texture, on the first material to supplied.
+    """
+    new_material = target_object.material_slots[0].material.copy()
+    target_object.material_slots[0].material = new_material
+
+    new_texture = new_material.texture_slots[0].texture.copy()
+    new_material.texture_slots[0].texture = new_texture
+
+    new_image = bpy.data.images.load(image_filename)
+    new_texture.image = new_image
+
+def swap_text(target_object, backer, index):
     cwd = os.path.dirname(bpy.data.filepath)
     text_to_render = backer['Name'] + ', ' + backer['Country']
     filename = cwd + '\\texture_cache\\' + str(index) + '.png'
     render_text_to_file(text_to_render, filename)
-    print("Swapping texture to:", backer) # TODO actually swap
+    swap_texture(target_object, filename)
 
 def go():
     print("Texture Painter starting up.")
@@ -66,8 +78,8 @@ def go():
     prototype = bpy.context.selected_objects[0]
     for num, backer in enumerate(get_backers('backers_10.csv')):
         if num == 0:
-            plaque = prototype
+            target_object = prototype
         else:
             x, y = get_offset(num, 4, (-.2,.6,0))
-            plaque = create_plaque(prototype, (x, y, 0))
-        swap_text(plaque, backer, num)
+            target_object = create_target_object(prototype, (x, y, 0))
+        swap_text(target_object, backer, num)

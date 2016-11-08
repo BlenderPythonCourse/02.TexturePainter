@@ -76,10 +76,10 @@ def go():
     throw_invalid_selection()
     print("Prototype object found.")
     prototype = bpy.context.selected_objects[0]
-    for num, backer in enumerate(get_backers('backers_10.csv')):
+    for num, backer in enumerate(get_backers('backers.csv')):
         if num == 0:
             target_object = prototype
         else:
-            x, y = get_offset(num, 4, (-.2,.6,0))
+            x, y = get_offset(num, 400, (-.5,.6,0))
             target_object = create_target_object(prototype, (x, y, 0))
         swap_text(target_object, backer, num)

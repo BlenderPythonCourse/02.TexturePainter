@@ -43,7 +43,7 @@ def create_target_object(prototype, offset):
 
 def get_offset(num, rows, spacing):
     """Return offset from prototype position.
-    Keyword arguments:
+    Positional arguments:
     num -- the number of the object, starting from 0
     rows -- how many rows before wrapping
     spacing -- a tuple of (x,y) spaing between objects
@@ -52,8 +52,9 @@ def get_offset(num, rows, spacing):
     y_offset = (num // rows) * spacing[1] # y-spacing
     return (x_offset, y_offset)
 
-def swap_texture(target_object, image_filename):
-    """Swaps the first texture, on the first material to supplied.
+def swap_texture_br(target_object, image_filename):
+    """Swaps the first texture, on the first material to supplied
+    This method is designed for Blender Render materials.
     """
     new_material = target_object.material_slots[0].material.copy()
     target_object.material_slots[0].material = new_material
@@ -64,19 +65,25 @@ def swap_texture(target_object, image_filename):
     new_image = bpy.data.images.load(image_filename)
     new_texture.image = new_image
 
+def swap_texture_cycles(target_object, image_filename):
+    new_material = target_object.material_slots[0].material.copy()
+    target_object.material_slots[0].material = new_material
+    new_image = bpy.data.images.load(image_filename)
+    new_material.node_tree.nodes['Image Texture'].image = new_image
+
 def swap_text(target_object, backer, index):
     cwd = os.path.dirname(bpy.data.filepath)
     text_to_render = backer['Name'] + ', ' + backer['Country']
     filename = cwd + '\\texture_cache\\' + str(index) + '.png'
     render_text_to_file(text_to_render, filename)
-    swap_texture(target_object, filename)
+    swap_texture_cycles(target_object, filename)
 
 def go():
     print("Texture Painter starting up.")
     throw_invalid_selection()
     print("Prototype object found.")
     prototype = bpy.context.selected_objects[0]
-    for num, backer in enumerate(get_backers('backers.csv')):
+    for num, backer in enumerate(get_backers('backers_10.csv')):
         if num == 0:
             target_object = prototype
         else:

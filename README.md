@@ -115,6 +115,3 @@
 ### Section 2 Wrap-Up ###
 
 Please share what you have created with other students.
-
----
-Find out more about our [Automate Blender with Python Course](https://www.udemy.com/blenderpython/?couponCode=GitHubDiscount).
